@@ -2,10 +2,33 @@ version: '3'
 services:
   mongo:
     image: mongo
+    networks: 
+      - backend
   frontend:
-    image: node
+    image: node:9.3.0-alpine
     ports:
-      80:3000
-    depends_on: backend
+      - "80:3000"
+    volumes:
+      - ./frontend/:/usr/app/
+    working_dir: /usr/app/
+    command: npm install
+    command: npm start
+    depends_on: 
+      - backend
+    networks: 
+      - backend
+      - frontend
   backend:
-    image: node
+    image: node:9.3.0-alpine
+    volumes:
+      - ./backend/:/usr/app/
+    depends_on:
+      - mongo
+    networks:
+      - backend
+    working_dir: /usr/app/
+    command: npm install
+    command: npm start
+networks: 
+ frontend:
+ backend:
