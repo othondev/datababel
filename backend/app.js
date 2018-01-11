@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const mongoose = require('mongoose');
 const passport = require('passport');
+const LocalStrategy = require('./auth/LocalStrategy');
 
 const users = require('./routes/users');
 
@@ -21,6 +22,8 @@ app.use(session({ secret: 'this_is_a_really_secret' }));
 app.use(passport.initialize());
 app.use(passport.session());
 
+passport.use(LocalStrategy);
+
 app.use('/users', users);
 
 app.use(function(req, res, next) {
@@ -30,11 +33,12 @@ app.use(function(req, res, next) {
 });
 
 app.use(function(err, req, res, next) {
+  console.log(err.message);
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
   res.status(err.status || 500);
-  res.render('error');
+  res.send(err.message);
 });
 
 module.exports = app;
