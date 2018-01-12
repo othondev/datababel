@@ -22,6 +22,14 @@ app.use(session({ secret: 'this_is_a_really_secret' }));
 app.use(passport.initialize());
 app.use(passport.session());
 
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
+
+passport.deserializeUser(function(user, done) {
+  done(null, user);
+});
+
 passport.use(LocalStrategy);
 
 app.use('/users', users);

@@ -6,7 +6,7 @@ module.exports = new LocalStrategy((username,password,done)=>{
     User.findOne({username:username},(err,user)=>{
         if (err) { return done(err); }
 
-        if(!user || !user.validPassword(password)){
+        if(!user || !User.validPassword(password,user)){
             return done(null,false,{ message: 'User or password wrong' })
         }
         return done(null,user);
